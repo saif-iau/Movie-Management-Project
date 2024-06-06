@@ -13,7 +13,7 @@
    ```bash
    npm install
    ```
-3. Configure MongoDB URI in `config.js`:
+3. Configure MongoDB URI in `.env`:
 
    ```javascript
    module.exports = {
@@ -93,5 +93,5 @@
 - To start the server in development mode with nodemon:
 
   ```bash
-  npm run dev
+  npm start
   ```
