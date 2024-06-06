@@ -1,4 +1,7 @@
 const Movie = require('../models/movie.model');
+const mongoose = require('mongoose');
+const {  checkValidID } = require('../utilities/movie.utils');
+const ObjectId = mongoose.Types.ObjectId;
 
 const getMovies = async (req, res) => {
     try {
@@ -10,9 +13,12 @@ const getMovies = async (req, res) => {
 };
 
 const checkAvailability = async (req, res) => {
-    const { movieId, slotId } = req.body;
+    const { movieId, slotId } = req.params;
+   
     try {
+        checkValidID(movieId,slotId)
         const movie = await Movie.findById(movieId);
+        console.log(movie)
         if (!movie) return res.status(404).json({ error: 'Movie not found' });
 
         const slot = movie.timeSlots.id(slotId);
@@ -27,7 +33,7 @@ const checkAvailability = async (req, res) => {
 const reserveTimeSlot = async (req, res) => {
     const { movieId, slotId } = req.body;
     const { numPeople } = req.body;
-
+    checkValidID(movieId,slotId)
     if (numPeople <= 0) return res.status(400).json({ error: 'Invalid number of people' });
 
     try {
