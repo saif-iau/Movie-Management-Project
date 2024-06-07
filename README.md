@@ -1,97 +1,107 @@
-# Movie Reservation System API
+**Movie Reservation System**
 
-## Setup
+A simple RESTful API using Node.js, Express.js, and MongoDB to manage a movie reservation system.
+
+**Features**
+
+* **Movie Listing Endpoint** : Retrieve a list of available movies.
+* **Check Availability Endpoint** : Check the availability of a specific time slot for a movie.
+* **Reserve Time Slot Endpoint** : Reserve a time slot for a movie.
+* **User Registration and Login** : Register new users and log in existing users to obtain access tokens.
+* **Token Authentication** : Secure the movie endpoints with JWT-based authentication.
+
+**Requirements**
+
+* Node.js
+* MongoDB
+
+**Setup**
 
 1. Clone the repository:
-
-   ```bash
-   git clone <repository-url>
-   cd movie-reservation-system
-   ```
+   git clone <repository_url>
+   cd Movie-Reservation-System
 2. Install dependencies:
-
-   ```bash
    npm install
-   ```
-3. Configure MongoDB URI in `.env`:
-
-   ```javascript
-   module.exports = {
-       mongoURI: 'your-mongodb-uri'
-   };
-   ```
+3. Create a `.env` file in the root directory and add the following environment variables:
+   MONGO_URI=your_mongodb_connection_string
+   ACCESS_TOKEN_SECRET=your_secret_key
 4. Start the server:
-
-   ```bash
    npm start
-   ```
 
-## API Endpoints
+**API Endpoints**
 
-### Get List of Movies
+**User Registration**
 
-- **Endpoint:** `GET /api/movies`
-- **Description:** Retrieve a list of available movies with their time slots and capacities.
-- **Response:**
+* **URL** : `/api/users/register`
+* **Method** : `POST`
+* **Body** :
+  {
+  "username": "your_username",
+  "password": "your_password"
+  }
+* **Response** :
+  {
+  "message": "User registered successfully"
+  }
 
-  ```json
+**User Login**
+
+* **URL** : `/api/users/login`
+* **Method** : `POST`
+* **Body** :
+  {
+  "username": "your_username",
+  "password": "your_password"
+  }
+* **Response** :
+  {
+  "token": "your_jwt_token"
+  }
+
+**Movie Listing**
+
+* **URL** : `/api/movies`
+* **Method** : `GET`
+* **Headers** :
+  Authorization: Bearer your_jwt_token
+* **Response** :
   [
-      {
-          "_id": "movieId",
-          "title": "Movie Title",
-          "timeSlots": [
-              {
-                  "_id": "slotId",
-                  "slot": "Time Slot",
-                  "capacity": 100,
-                  "booked": 20
-              }
-          ]
-      }
+  {
+  "_id": "movie_id",
+  "title": "Movie Title",
+  "timeSlots": [
+  {
+  "_id": "slot_id",
+  "slot": "Time Slot",
+  "capacity": 50,
+  "booked": 10
+  }
   ]
-  ```
-
-### Check Availability
-
-- **Endpoint:** `GET /api/movies/:movieId/availability/:slotId`
-- **Description:** Check the availability of a specific time slot for a movie.
-- **Parameters:** `movieId` (path), `slotId` (path)
-- **Response:**
-
-  ```json
-  {
-      "availableCapacity": 80
   }
-  ```
+  ]
 
-### Reserve Time Slot
+**Check Availability**
 
-- **Endpoint:** `POST /api/movies/:movieId/reserve/:slotId`
-- **Description:** Reserve a time slot for a movie.
-- **Parameters:** `movieId` (path), `slotId` (path), `numPeople` (body)
-- **Response:**
-
-  ```json
+* **URL** : `/api/movies/:movieId/slots/:slotId/availability`
+* **Method** : `GET`
+* **Headers** :
+  Authorization: Bearer your_jwt_token
+* **Response** :
   {
-      "message": "Reservation successful",
-      "remainingCapacity": 70
+  "availableCapacity": 40
   }
-  ```
 
-## Error Handling
+**Reserve Time Slot**
 
-- All error responses will have the following format:
-
-  ```json
+* **URL** : `/api/movies/:movieId/slots/:slotId/reserve`
+* **Method** : `POST`
+* **Headers** :
+  Authorization: Bearer your_jwt_token
+* **Body** :
   {
-      "error": "Error message"
+  "numberOfSeats": 2
   }
-  ```
-
-## Development
-
-- To start the server in development mode with nodemon:
-
-  ```bash
-  npm start
-  ```
+* **Response** :
+  {
+  "message": "Time slot reserved successfully"
+  }
