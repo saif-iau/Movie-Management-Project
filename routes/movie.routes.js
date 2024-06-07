@@ -1,10 +1,11 @@
 const express = require('express');
-const router = express.Router();
+const movieRouter = express.Router();
 const {getMovies , checkAvailability , reserveTimeSlot , addMovie} = require('../controllers/movie.controller');
+const authenticateToken = require('../middleware/auth');
 
-router.get('/', getMovies);
-router.post('/create' , addMovie)
-router.get('/:movieId/availability/:slotId', checkAvailability);
-router.post('/:movieId/reserve/:slotId', reserveTimeSlot);
+movieRouter.get('/',authenticateToken, getMovies);
+movieRouter.post('/create',authenticateToken , addMovie)
+movieRouter.get('/:movieId/availability/:slotId',authenticateToken, checkAvailability);
+movieRouter.post('/:movieId/reserve/:slotId',authenticateToken, reserveTimeSlot);
 
-module.exports = router;
+module.exports = movieRouter;
